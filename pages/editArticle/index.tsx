@@ -1,15 +1,17 @@
 import type { NextPage } from "next";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { Grid, Textarea, Text, Button } from "@nextui-org/react";
 import { createServerSupabaseClient, User } from '@supabase/auth-helpers-nextjs';
 import { GetServerSidePropsContext } from 'next';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+// localhost:3000/editArticle?id=1 => THis is an example
 
-const CreateArticle: NextPage<{ user: User }, {}> = ({ user }) => {
+const EditArticle: NextPage<{ user: User }, {}> = ({ user }) => {
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
+  const { id } = router.query;
 
   const initialState = {
     title: "",
@@ -19,22 +21,39 @@ const CreateArticle: NextPage<{ user: User }, {}> = ({ user }) => {
   const handleChange = (e: any) => {
     setArticleData({...articleData, [e.target.name] : e.target.value })
   }
-  const createArticle = async () => {
+
+  useEffect( () => {
+    async function getArticle() {
+        const {data, error } = await supabaseClient
+            .from("articles")
+            .select("*")
+            .filter("id", "eq", id )
+            .single();
+        if (error) {
+            console.log(error);
+        } else {
+            setArticleData(data); // This still have the Title and the cantent
+        }                 
+    }
+    if (typeof id !== "undefined") {
+        getArticle();
+    }
+}, [id] )
+
+  const editArticle = async () => {
     try {
       const { data, error } = await supabaseClient
       .from("articles")
-      .insert([
+      .update([
         {
           title: articleData.title,
           content: articleData.content,
-          user_email: user?.email?.toLowerCase(),
-          user_id: user?.id
+
         }
       ])
-      .single();
+      .eq("id", id);
       if (error) throw error;
-      setArticleData(initialState);
-      router.push("/main-feed");
+      router.push("/article?id=" + id);
     } catch (error: any) {
       alert(error.message);
     }
@@ -52,6 +71,7 @@ const CreateArticle: NextPage<{ user: User }, {}> = ({ user }) => {
                 rows={1}
                 size="xl"
                 onChange={handleChange}
+                initialValue={articleData.title}
             />
         </Grid>
         <Text h3>Article Text</Text>
@@ -64,12 +84,13 @@ const CreateArticle: NextPage<{ user: User }, {}> = ({ user }) => {
                 rows={6}
                 size="xl"
                 onChange={handleChange}
+                initialValue={articleData.content}
             />
         </Grid>
         <Grid xs={12}>
-            <Text>Posting as {user?.email}</Text>
+            <Text>Editing as {user?.email}</Text>
         </Grid>
-        <Button onPress={createArticle}>Create Article</Button>
+        <Button onPress={editArticle}>Update Article</Button>
     </Grid.Container>
   )
 }
@@ -95,4 +116,4 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   };
 };
 
-export default CreateArticle;
+export default EditArticle;

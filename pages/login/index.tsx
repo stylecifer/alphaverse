@@ -12,7 +12,7 @@ const Login: NextPage = () => {
     const router = useRouter();
 
     if (user) {
-        router.push("/mainFeed");
+        router.push("/main-feed");
 
     }
     return (

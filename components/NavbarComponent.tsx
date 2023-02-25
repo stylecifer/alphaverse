@@ -1,4 +1,3 @@
-'use client'
 import { useRouter } from "next/navigation";
 import React, {useEffect} from "react";
 import { Navbar, Button, Text } from "@nextui-org/react";
@@ -21,7 +20,7 @@ const NavbarComponent = () => {
                 Lingovers
             </Navbar.Brand>
             <Navbar.Content hideIn="xs" variant="highlight-rounded">
-                <Navbar.Link href="/mainFeed">Main Feed</Navbar.Link>
+                <Navbar.Link href="/main-feed">Main Feed</Navbar.Link>
                 <Navbar.Link href="/create-article">Create Article</Navbar.Link>
             </Navbar.Content>
 
