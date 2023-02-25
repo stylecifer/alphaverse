@@ -7,10 +7,6 @@ interface Props {
     article: any
 }
 
-interface Props {
-    article: any
-}
-
 const ArticleCard: NextPage<Props> = (props) => {
     const router = useRouter();
     const { article } = props;

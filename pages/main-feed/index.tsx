@@ -10,7 +10,7 @@ const Feed: NextPage = () => {
     const supabaseClient = useSupabaseClient();
     const user = useUser();
     const router = useRouter();
-    const [articles, setArticles] = useState<string[]>([]);
+    const [articles, setArticles] = useState<any[]>([]);
 
     useEffect(() => {
         getArticles();
@@ -37,7 +37,7 @@ const Feed: NextPage = () => {
                 Check out articles from users here
             </Text>
             {articles.map((article) => (
-                <ArticleCard article={article} />
+                <ArticleCard key={article.id} article={article} />
             ))}
             </>
     )

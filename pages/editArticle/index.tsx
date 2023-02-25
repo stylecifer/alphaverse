@@ -38,7 +38,7 @@ const EditArticle: NextPage<{ user: User }, {}> = ({ user }) => {
     if (typeof id !== "undefined") {
         getArticle();
     }
-}, [id] )
+}, [id, supabaseClient] )
 
   const editArticle = async () => {
     try {
