@@ -1,23 +1,29 @@
+import React, { useState } from 'react';
+import DatePicker from '@datepicker-react/styled';
 import axios from 'axios';
-import { useState } from 'react';
+declare module '@datepicker-react/styled' {
+    export const DatePicker: any;
+  }
+  
+
 
 const CreateMeeting = () => {
   const [title, setTitle] = useState('');
-  const [startTime, setStartTime] = useState('');
+  const [startTime, setStartTime] = useState(new Date());
   const [duration, setDuration] = useState('');
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const response = await axios.post('https://api.zoom.us/v2/users/me/meetings', {
         topic: title,
         type: 2,
-        start_time: startTime,
+        start_time: startTime.toISOString(),
         duration: duration,
       }, {
         headers: {
-          'Authorization': `Bearer $CLIENT_SECRET`
+          'Authorization': `Bearer ${process.env.CLIENT_SECRET}`
         }
       });
 
@@ -35,11 +41,9 @@ const CreateMeeting = () => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Start Time (YYYY-MM-DDTHH:MM:SSZ)"
-        value={startTime}
-        onChange={(e) => setStartTime(e.target.value)}
+      <DatePicker
+        onChangeDate={(date: React.SetStateAction<Date>) => setStartTime(date)}
+        selected={startTime}
       />
       <input
         type="text"
