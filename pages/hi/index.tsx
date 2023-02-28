@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Hi = () => {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState<any>({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import DatePicker from '@datepicker-react/styled';
 import axios from 'axios';
-declare module '@datepicker-react/styled' {
-    export const DatePicker: any;
-  }
   
-
 
 const CreateMeeting = () => {
   const [title, setTitle] = useState('');
@@ -41,10 +36,10 @@ const CreateMeeting = () => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <DatePicker
+      {/* <DatePicker
         onChangeDate={(date: React.SetStateAction<Date>) => setStartTime(date)}
         selected={startTime}
-      />
+      /> */}
       <input
         type="text"
         placeholder="Duration (minutes)"
